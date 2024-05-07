@@ -14,7 +14,6 @@ const font = Poppins({ subsets: ['latin'], weight: '600' });
 export const OrgSidebar = () => {
   const searchParams = useSearchParams();
   const favourites = searchParams.get('favourite');
-  console.log(favourites, '## favourites');
   return (
     <div className='hidden lg:flex flex-col space-y-6 w-[206px] pl-5 pt-5'>
       <Link href='/'>

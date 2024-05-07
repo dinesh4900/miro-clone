@@ -8,8 +8,6 @@ export const List = () => {
     userMemberships: { infinite: true },
   });
 
-  console.log(userMemberships, '## user memebrships');
-
   if (!userMemberships.data?.length) return;
 
   return (
