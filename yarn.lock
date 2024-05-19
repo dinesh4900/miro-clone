@@ -58,7 +58,7 @@
     snakecase-keys "3.2.1"
     tslib "2.4.1"
 
-"@clerk/nextjs@^4.29.12":
+"@clerk/nextjs@4.29.12":
   version "4.29.12"
   resolved "https://registry.yarnpkg.com/@clerk/nextjs/-/nextjs-4.29.12.tgz#4cc5f4b2854c64e50882b8ab545cc1277333044a"
   integrity sha512-9pB6s4E50OjUjySVhQpSHu9DC0zIGqVJdneMXcL26fk48+U7lq9XCAZEFNIYUVQeMMvEI1elWSgNmi2Xmpr8ug==

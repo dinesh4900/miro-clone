@@ -1,3 +1,5 @@
+'use-client'
+
 import React from 'react';
 import { NewButton } from './new-button';
 import { List } from './list';
