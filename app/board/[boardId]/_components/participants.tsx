@@ -1,5 +1,3 @@
-import { Skeleton } from '@/components/ui/skeleton';
-
 export const Participants = () => {
   return (
     <div className='absolute top-2 right-2 h-12 bg-white rounded-md p-3 flex items-center shadow-md'>
@@ -8,10 +6,8 @@ export const Participants = () => {
   );
 };
 
-Participants.Skeleton = function ParticipantSkelton() {
+export const ParticipantsSkeleton = () => {
   return (
-    <div className='absolute top-2 right-2 h-12 bg-white rounded-md p-3 flex items-center shadow-md w-[300px]'>
-      <Skeleton className='w-full h-full bg-muted-400' />
-    </div>
+    <div className='absolute top-2 right-2 h-12 bg-white rounded-md p-3 flex items-center shadow-md w-[300px]' />
   );
 };
