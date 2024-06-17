@@ -2,6 +2,7 @@ import { createClient } from '@liveblocks/client';
 import { createRoomContext, createLiveblocksContext } from '@liveblocks/react';
 
 const client = createClient({
+  throttle: 16,
   authEndpoint: '/api/liveblocks-auth',
   // publicApiKey:
   //   'pk_dev_Py8NecVZgGClNXiTSQpQ-pXMfSAQDGq7_2M8tbIstYe89yNAVRbOjo3IGfunr4q3',
@@ -51,8 +52,7 @@ const client = createClient({
 // and that will automatically be kept in sync. Accessible through the
 // `user.presence` property. Must be JSON-serializable.
 type Presence = {
-  // cursor: { x: number, y: number } | null,
-  // ...
+  cursor: { x: number; y: number } | null;
 };
 
 // Optionally, Storage represents the shared document that persists in the

@@ -26,7 +26,6 @@ const TabSeperator = () => {
 export const Info = ({ boardId }: InfoProps) => {
   const { onOpen } = useRenameModal();
   const board = useQuery(api.board.get, { id: boardId as Id<'boards'> });
-  console.log(board, '## board');
 
   if (!board) return <InfoSkeleton />;
   return (

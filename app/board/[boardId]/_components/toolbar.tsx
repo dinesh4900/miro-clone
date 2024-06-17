@@ -9,12 +9,7 @@ import {
   Undo2,
 } from 'lucide-react';
 import { ToolButton } from './tool-button';
-import {
-  CanvasModeEnum,
-  CanvasState,
-  LayerType,
-  LayerTypeEnum,
-} from '@/types/canvas';
+import { CanvasModeEnum, CanvasState, LayerTypeEnum } from '@/types/canvas';
 
 interface ToolbarProps {
   canvasState: CanvasState;

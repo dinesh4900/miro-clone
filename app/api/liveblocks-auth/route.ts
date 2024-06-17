@@ -27,11 +27,11 @@ export async function POST(request: Request) {
   }
 
   const userInfo = {
-    name: user.firstName || 'Teammate',
-    image: user.imageUrl,
+    name: user?.firstName || 'Teammate',
+    image: user?.imageUrl,
   };
 
-  const session = liveblocks.prepareSession(user.id, { userInfo });
+  const session = liveblocks.prepareSession(user?.id || '', { userInfo });
 
   if (room) {
     session.allow(room, session.FULL_ACCESS);

@@ -28,8 +28,6 @@ export const get = query({
 
     //   const boards = await getAllOrThrow(ctx.db, ids as any);
 
-    //   console.log(ctx.db, '## board');
-
     //   return boards.map((board) => ({ ...board, isFavourite: true }));
     // }
 
