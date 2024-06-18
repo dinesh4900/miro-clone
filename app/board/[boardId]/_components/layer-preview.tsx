@@ -8,6 +8,8 @@ import { Rectangle } from './rectangle';
 import { Ellipse } from './ellipse';
 import { LayerText } from './text';
 import { StickyNote } from './sticky-note';
+import { Path } from './path';
+import { colorToCss } from '@/lib/utils';
 
 interface LayerPreviewProps {
   id: string;
@@ -22,6 +24,18 @@ export const LayerPreview = memo(
     if (!layer) return null;
 
     switch (layer.type) {
+      case LayerTypeEnum.Path:
+        return (
+          <Path
+            key={id}
+            points={layer.points}
+            onPointerDown={(e) => onLayerPointerDown(e, id)}
+            x={layer.x}
+            y={layer.y}
+            fill={layer.fill ? colorToCss(layer.fill) : '#000'}
+            stroke={selectionColor}
+          />
+        );
       case LayerTypeEnum.Reactangle:
         return (
           <Rectangle

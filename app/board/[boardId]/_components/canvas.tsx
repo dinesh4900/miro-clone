@@ -28,6 +28,7 @@ import React from 'react';
 import {
   connectionIdToColor,
   findIntersectingLayersWithReactange,
+  penPointsToPathLayer,
   pointerEventToCanvasPoint,
   resizeBounds,
 } from '@/lib/utils';
@@ -128,6 +129,71 @@ export const Canvas = ({ boardId }: CanvasProps) => {
     }
   }, []);
 
+  const continueDrawing = useMutation(
+    ({ self, setMyPresence }, point: Point, e: React.PointerEvent) => {
+      const { pencilDraft } = self.presence;
+
+      if (
+        canvasState.mode !== CanvasModeEnum.Pencil ||
+        e.buttons !== 1 ||
+        pencilDraft == null
+      ) {
+        return;
+      }
+
+      setMyPresence({
+        cursor: point,
+        pencilDraft:
+          pencilDraft.length === 1 &&
+          pencilDraft[0][0] === point.x &&
+          pencilDraft[0][1] === point.y
+            ? pencilDraft
+            : [...pencilDraft, [point.x, point.y, e.pressure]],
+      });
+    },
+    [canvasState.mode]
+  );
+
+  const insertPath = useMutation(
+    ({ storage, self, setMyPresence }) => {
+      const liveLayers = storage.get('layers');
+      const { pencilDraft } = self.presence;
+
+      if (
+        pencilDraft == null ||
+        pencilDraft.length < 2 ||
+        liveLayers.size >= MAX_LAYERS
+      ) {
+        setMyPresence({ pencilDraft: null });
+        null;
+      }
+
+      const id = nanoid();
+
+      liveLayers.set(
+        id,
+        new LiveObject(penPointsToPathLayer(pencilDraft as any, lastUserColor))
+      );
+
+      const liveLayerIds = storage.get('layerIds');
+      liveLayerIds.push(id);
+
+      setMyPresence({ pencilDraft: null });
+      setCanvasState({ mode: CanvasModeEnum.Pencil });
+    },
+    [lastUserColor]
+  );
+
+  const startDrawing = useMutation(
+    ({ setMyPresence }, point: Point, pressure: number) => {
+      setMyPresence({
+        pencilDraft: [[point.x, point.y, pressure]],
+        penColor: lastUserColor,
+      });
+    },
+    []
+  );
+
   const resizeSelectedLayer = useMutation(
     ({ storage, self }, point: Point) => {
       if (canvasState.mode !== CanvasModeEnum.Resizing) return;
@@ -204,11 +270,20 @@ export const Canvas = ({ boardId }: CanvasProps) => {
         translateSelectedLayer(current);
       } else if (canvasState.mode === CanvasModeEnum.Resizing) {
         resizeSelectedLayer(current);
+      } else if (canvasState.mode === CanvasModeEnum.Pencil) {
+        continueDrawing(current, e);
       }
-
       setMyPresence({ cursor: current });
     },
-    [canvasState, resizeSelectedLayer, translateSelectedLayer]
+    [
+      canvasState,
+      resizeSelectedLayer,
+      translateSelectedLayer,
+      startMultiSelection,
+      camera,
+      continueDrawing,
+      updateSelectionNet,
+    ]
   );
 
   const onPointerLeave = useMutation(({ setMyPresence }) => {
@@ -226,6 +301,8 @@ export const Canvas = ({ boardId }: CanvasProps) => {
         console.log('Unselect');
         unSelectLayers();
         setCanvasState({ mode: CanvasModeEnum.None });
+      } else if (canvasState.mode === CanvasModeEnum.Pencil) {
+        insertPath();
       } else if (canvasState.mode === CanvasModeEnum.Inserting) {
         insertLayer(canvasState.layerType, point);
       } else {
@@ -234,7 +311,15 @@ export const Canvas = ({ boardId }: CanvasProps) => {
 
       history.resume();
     },
-    [camera, canvasState, history, insertLayer, unSelectLayers]
+    [
+      camera,
+      canvasState,
+      history,
+      insertLayer,
+      unSelectLayers,
+      insertPath,
+      setCanvasState,
+    ]
   );
 
   const onPointerDown = useCallback(
@@ -243,9 +328,13 @@ export const Canvas = ({ boardId }: CanvasProps) => {
 
       if (canvasState.mode === CanvasModeEnum.Inserting) return;
 
+      if (canvasState.mode === CanvasModeEnum.Pencil) {
+        startDrawing(point, e.pressure);
+      }
+
       setCanvasState({ origin: point, mode: CanvasModeEnum.Pressing });
     },
-    [canvasState, setCanvasState, canvasState.mode]
+    [canvasState, setCanvasState, canvasState.mode, startDrawing]
   );
 
   const selections: any = useOthersMapped((other) => other.presence.selection);
