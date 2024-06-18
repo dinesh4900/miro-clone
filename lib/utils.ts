@@ -100,7 +100,7 @@ export function findIntersectingLayersWithReactange(
       continue;
     }
 
-    const { x, y, height, width } = layer;
+    const { x, y, height, width } = layer as any;
 
     if (
       rect.x + rect.width > x &&

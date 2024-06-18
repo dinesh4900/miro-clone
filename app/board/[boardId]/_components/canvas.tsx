@@ -218,6 +218,8 @@ export const Canvas = ({ boardId }: CanvasProps) => {
     ({ storage, self }, point: Point) => {
       if (canvasState.mode !== CanvasModeEnum.Translating) return;
 
+      if (!canvasState.current) return;
+
       const offSet = {
         x: point.x - canvasState.current.x,
         y: point.y - canvasState.current.y,
