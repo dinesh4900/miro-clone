@@ -12,8 +12,6 @@ const boundingBox = (layers: Layer[]): any => {
   let top = first.y;
   let bottom = first.y + first.height;
 
-  console.log(layers.length, '## came here');
-
   for (let i = 0; i < layers.length; i++) {
     const { x, y, width, height } = layers[i];
 
@@ -45,18 +43,10 @@ const boundingBox = (layers: Layer[]): any => {
 export const useSelectionBounds = () => {
   const selection = useSelf((me) => me.presence.selection);
 
-  console.log(selection, '## selection');
-
   return useStorage((root) => {
     const selectedLayers = selection
       .map((layerId) => root.layers.get(layerId)!)
       .filter(Boolean);
-
-    console.log(selectedLayers, '## selection 34');
-
-    const finalResult = boundingBox(selectedLayers);
-
-    console.log(finalResult, '## finalResult');
 
     return boundingBox(selectedLayers);
   }, shallow);

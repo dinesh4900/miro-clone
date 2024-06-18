@@ -5,6 +5,9 @@ import { LayerTypeEnum } from '@/types/canvas';
 import React from 'react';
 import { memo } from 'react';
 import { Rectangle } from './rectangle';
+import { Ellipse } from './ellipse';
+import { LayerText } from './text';
+import { StickyNote } from './sticky-note';
 
 interface LayerPreviewProps {
   id: string;
@@ -22,6 +25,33 @@ export const LayerPreview = memo(
       case LayerTypeEnum.Reactangle:
         return (
           <Rectangle
+            id={id}
+            layer={layer}
+            onPointerDown={onLayerPointerDown}
+            selectionColor={selectionColor}
+          />
+        );
+      case LayerTypeEnum.Ellipse:
+        return (
+          <Ellipse
+            id={id}
+            layer={layer}
+            onPointerDown={onLayerPointerDown}
+            selectionColor={selectionColor}
+          />
+        );
+      case LayerTypeEnum.Text:
+        return (
+          <LayerText
+            id={id}
+            layer={layer}
+            onPointerDown={onLayerPointerDown}
+            selectionColor={selectionColor}
+          />
+        );
+      case LayerTypeEnum.Note:
+        return (
+          <StickyNote
             id={id}
             layer={layer}
             onPointerDown={onLayerPointerDown}
